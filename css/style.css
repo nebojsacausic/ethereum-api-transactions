@@ -1,0 +1,15 @@
+.eth_form{
+    padding: 30px;
+}
+
+#transaction_table table tr td{
+    padding: 20px;
+}
+
+#list_transaction table tbody tr td p{
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
