@@ -10,7 +10,6 @@ function getTransactions(){
     var address = $("#address").val();
     var fromBlock = $("#fromBlock").val();
     var toBlock = $("#toBlock").val();
-    //console.log(address);
 
     $.ajax({
         url : "https://api.etherscan.io/api?module=account&action=txlist&address="+address+"&startblock="+fromBlock+"&endblock="+toBlock+"&sort=asc&apikey=PKIUS1NISTA3HUV7BS25VE44VP9AHQUZK1",
@@ -29,11 +28,6 @@ function getTransactions(){
 
 function transaction_list(data){
 
-    // function cutStrings(string){
-    //     var done = string.substring(0, 20) + "...";
-    //     return done;
-    // };
-
     var content = `<table class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -49,19 +43,17 @@ function transaction_list(data){
     var num = 1;
     data.result.forEach(function(t) {
       
-        
-        //Modifying value before entering
-        var valDone = modifyValue(t.value);
+        var valTable = modifyValue(t.value);
         
         content += `
-                            <tr>
-                                <td>${num++}</td>
-                                <td><a href="#" data-bs-target="#exampleModal" data-bs-toggle="modal"><p>${t.blockHash}</p></a></td>
-                                <td>${t.blockNumber}</td>
-                                <td><p>${t.from}</p></td>
-                                <td><p>${t.to}</p></td>
-                                <td><p>${valDone}</p></td>
-                            </tr>`
+                    <tr>
+                        <td>${num++}</td>
+                        <td><a href="#" data-bs-target="#exampleModal" data-bs-toggle="modal"><p>${t.blockHash}</p></a></td>
+                        <td>${t.blockNumber}</td>
+                        <td><p>${t.from}</p></td>
+                        <td><p>${t.to}</p></td>
+                        <td><p>${valTable}</p></td>
+                    </tr>`
         
     });
 
@@ -137,28 +129,11 @@ function transaction_list(data){
                                     </table>`;
                 $("#exampleModal .modal-body").html(transContent);
             }
-        })
-
-        
+        })        
     })
-    // $("#list_transaction tbody tr").click(function(){
-    //      console.log($(this).find("td").html());
-    //  })
-
-    // $("#list_transaction table").delegate("tr.rows", "click", function(){
-    //     console.log($(this));
-    // });
-
-    // $("#list_transaction table tr").click(function(){
-    //     $(this).find("td").each(function(){
-    //         console.log($(this).html());
-    //     });
-    // });
 }
 
 function modifyValue(val){
-    //Modifying value before entering
-    //var val = v;
     if(val.length<19){
         var br = 19-val.length;
         for(var i = 0; i<br; i++){
