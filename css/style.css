@@ -13,3 +13,7 @@
     text-overflow: ellipsis;
     margin: 0;
   }
+
+  #exampleModal .modal-content table td{
+      min-width: 190px;
+  }

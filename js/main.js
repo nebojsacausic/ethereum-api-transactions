@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    
+
     $("#search_btn").click(getTransactions);
 
 })
@@ -49,21 +51,12 @@ function transaction_list(data){
       
         
         //Modifying value before entering
-        var val = t.value;
-        if(val.length<19){
-            var br = 19-val.length;
-            for(var i = 0; i<br; i++){
-                val = "0"+val;
-            }
-        }
-        var a = val.substring(val.length-18, val.length);
-        var b = val.substring(0, val.length-18);
-        var valDone = b + "." + a;
-        //console.log(valDone);
+        var valDone = modifyValue(t.value);
+        
         content += `
                             <tr>
                                 <td>${num++}</td>
-                                <td><a href="#"><p>${t.blockHash}</p></a></td>
+                                <td><a href="#" data-bs-target="#exampleModal" data-bs-toggle="modal"><p>${t.blockHash}</p></a></td>
                                 <td>${t.blockNumber}</td>
                                 <td><p>${t.from}</p></td>
                                 <td><p>${t.to}</p></td>
@@ -83,7 +76,66 @@ function transaction_list(data){
 
         data.result.forEach(function(t){
             if(t.blockHash == tHash){
-                console.log(t);
+                var status = "";
+                if(t.txreceipt_status == 1){
+                    status = "Successful";
+                }
+                else{
+                    status = "Unsuccessful";
+                }
+
+
+                let unix_timestamp = t.timeStamp;
+                var date = new Date(unix_timestamp * 1000);
+                var day = date.getDate();
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = "0" + date.getMinutes();
+                var seconds = "0" + date.getSeconds();
+
+
+                var formattedDate = year + '-' + month + '-' + day + ' UTC ' + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+
+
+                var transContent = `<table class="table table-striped table-hover">
+                                        <tr>
+                                            <td><p>Transaction Hash:</p></td>
+                                            <td><p>${t.hash}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Status:</p></td>
+                                            <td><p>${status}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>From:</p></td>
+                                            <td><p>${t.from}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>To:</p></td>
+                                            <td><p>${t.to}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Value:</p></td>
+                                            <td><p>${modifyValue(t.value)}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Date:</p></td>
+                                            <td><p>${formattedDate}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Block hash:</p></td>
+                                            <td><p>${t.blockHash}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p>Block:</p></td>
+                                            <td><p>${t.blockNumber}</p></td>
+                                        </tr>
+
+                                    </table>`;
+                $("#exampleModal .modal-body").html(transContent);
             }
         })
 
@@ -102,4 +154,19 @@ function transaction_list(data){
     //         console.log($(this).html());
     //     });
     // });
+}
+
+function modifyValue(val){
+    //Modifying value before entering
+    //var val = v;
+    if(val.length<19){
+        var br = 19-val.length;
+        for(var i = 0; i<br; i++){
+            val = "0"+val;
+        }
+    }
+    var a = val.substring(val.length-18, val.length);
+    var b = val.substring(0, val.length-18);
+    let valDone = b + "." + a;
+    return valDone;
 }
